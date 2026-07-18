@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Documentation — Getting Started with IndexJet</title>
+  <meta name="description" content="Learn how to use IndexJet: quickstart, domain verification, single and bulk URL submission, sitemap monitoring, scheduled indexing, webhooks, rate limits and error codes.">
+  <link rel="canonical" href="https://www.indexjet.io/docs.html">
+  <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
+  <link rel="manifest" href="site.webmanifest">
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <meta name="theme-color" content="#0A1128">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="IndexJet">
+  <meta property="og:title" content="Documentation — Getting Started with IndexJet">
+  <meta property="og:description" content="Learn how to use IndexJet: quickstart, domain verification, single and bulk URL submission, sitemap monitoring, scheduled indexing, webhooks, rate limits and error codes.">
+  <meta property="og:url" content="https://www.indexjet.io/docs.html">
+  <meta property="og:image" content="https://www.indexjet.io/assets/img/og-cover.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Documentation — Getting Started with IndexJet">
+  <meta name="twitter:description" content="Learn how to use IndexJet: quickstart, domain verification, single and bulk URL submission, sitemap monitoring, scheduled indexing, webhooks, rate limits and error codes.">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+
+  <header class="site-header">
+    <div class="container">
+      <a class="brand" href="index.html" aria-label="IndexJet home">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 64 64" fill="none"><path d="M36 10 18 36h11l-3 18 20-27H34l2-17z" fill="#fff"/></svg>
+        </span>
+        IndexJet
+      </a>
+      <nav class="main-nav" id="main-nav" aria-label="Main navigation">
+        <a href="features.html">Features</a>
+        <a href="pricing.html">Pricing</a>
+        <a href="docs.html" aria-current="page">Docs</a>
+        <a href="api.html">API</a>
+        <a href="blog.html">Blog</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+      <div class="header-actions">
+        <a class="btn btn-ghost btn-sm" href="login.html">Log in</a>
+        <a class="btn btn-primary btn-sm" href="register.html">Start Free</a>
+        <button class="nav-toggle" aria-expanded="false" aria-controls="main-nav" aria-label="Toggle navigation menu">
+          <svg class="icon-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+          <svg class="icon-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="section">
+      <div class="container docs-layout">
+        <nav class="docs-nav" aria-label="Documentation">
+          <h2>Getting Started</h2>
+          <ul>
+            <li><a class="active" href="#introduction">Introduction</a></li>
+            <li><a href="#quickstart">Quickstart</a></li>
+            <li><a href="#concepts">Core Concepts</a></li>
+          </ul>
+          <h2>Guides</h2>
+          <ul>
+            <li><a href="#single">Submitting a Single URL</a></li>
+            <li><a href="#bulk">Bulk Submission</a></li>
+            <li><a href="#sitemaps">Sitemap Monitoring</a></li>
+            <li><a href="#scheduling">Scheduled Indexing</a></li>
+            <li><a href="#webhooks">Webhooks</a></li>
+          </ul>
+          <h2>Reference</h2>
+          <ul>
+            <li><a href="api.html">API Reference</a></li>
+            <li><a href="#limits">Rate Limits</a></li>
+            <li><a href="#errors">Error Codes</a></li>
+          </ul>
+        </nav>
+
+        <article class="docs-content prose" style="max-width:none;">
+          <h1 id="introduction">IndexJet Documentation</h1>
+          <p>Welcome! IndexJet gets your URLs in front of search engine crawlers through official APIs — the Google Indexing API, Bing URL Submission and the IndexNow protocol. This guide takes you from zero to your first indexed URL in under five minutes.</p>
+
+          <h2 id="quickstart">Quickstart</h2>
+          <p><strong>1. Create an account.</strong> <a href="register.html">Sign up free</a> — no credit card required, 50 URL credits included.</p>
+          <p><strong>2. Verify your site.</strong> Add your domain in the dashboard and verify ownership via DNS TXT record, HTML meta tag or file upload. Verification usually completes in under a minute.</p>
+          <p><strong>3. Submit your first URL.</strong> Use the dashboard widget, or grab an API key from <em>Dashboard → API Keys</em> and run:</p>
+          <div class="code-block"><span class="lang">bash</span><button class="copy-btn" aria-label="Copy code to clipboard"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button><pre>curl -X POST https://api.indexjet.io/v1/submit \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"urls": ["https://yoursite.com/new-page"]}'</pre></div>
+          <p><strong>4. Track status.</strong> Watch the URL move through <code>queued → processing → submitted → indexed</code> in the dashboard, or poll <code>GET /v1/submissions/:id</code>.</p>
+
+          <h2 id="concepts">Core Concepts</h2>
+          <h3>Projects</h3>
+          <p>A project groups URLs, credentials and reports for one website (or one client, if you're an agency). Credits are pooled at the account level and can be allocated per project.</p>
+          <h3>Credits</h3>
+          <p>One credit = one unique URL submitted in a billing cycle. Duplicate submissions of the same canonical URL within 24 hours are free. Permanently failed submissions are refunded automatically.</p>
+          <h3>Engines</h3>
+          <p>Each submission fans out to every engine enabled for the project: Google (Indexing API), Bing (URL Submission API) and IndexNow participants (Bing, Yandex, Seznam.cz, Naver). Per-engine results appear in your reports.</p>
+
+          <h2 id="single">Submitting a Single URL</h2>
+          <p>From the dashboard, paste a URL into the submission box and press <em>Index This URL</em>. IndexJet will:</p>
+          <ol>
+            <li>Validate the URL syntax and resolve redirects</li>
+            <li>Check <code>robots.txt</code> and the page's canonical tag</li>
+            <li>Queue the URL with the right priority</li>
+            <li>Submit to each enabled engine and record the response</li>
+          </ol>
+
+          <h2 id="bulk">Bulk Submission</h2>
+          <p>Three ways to submit in bulk:</p>
+          <ul>
+            <li><strong>Paste</strong> — up to 10,000 URLs, one per line</li>
+            <li><strong>Upload</strong> — .txt (one URL per line) or .csv (URLs in the first column), max 10&nbsp;MB</li>
+            <li><strong>API</strong> — <code>POST /v1/submit</code> accepts up to 1,000 URLs per request; loop for more</li>
+          </ul>
+          <p>Every batch is deduplicated against your submission history before credits are consumed.</p>
+
+          <h2 id="sitemaps">Sitemap Monitoring</h2>
+          <p>Add your XML sitemap under <em>Project → Sitemaps</em>. IndexJet polls it on your chosen interval (15 min – 24 h), diffs it against the previous crawl and automatically submits new or updated URLs based on <code>&lt;lastmod&gt;</code>.</p>
+          <div class="code-block"><span class="lang">bash</span><button class="copy-btn" aria-label="Copy code to clipboard"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button><pre>curl -X POST https://api.indexjet.io/v1/sitemaps \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"url": "https://yoursite.com/sitemap.xml", "interval": "1h"}'</pre></div>
+
+          <h2 id="scheduling">Scheduled Indexing</h2>
+          <p>Create schedules to submit URL sets at specific times — ideal for content calendars and product launches. Schedules support one-off runs, cron-style recurrence and timezone awareness.</p>
+
+          <h2 id="webhooks">Webhooks</h2>
+          <p>Register a webhook endpoint to receive events in real time:</p>
+          <div class="code-block"><span class="lang">json</span><button class="copy-btn" aria-label="Copy code to clipboard"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button><pre>{
+  "event": "url.indexed",
+  "created_at": "2026-07-18T09:41:00Z",
+  "data": {
+    "url": "https://yoursite.com/new-page",
+    "engine": "bing",
+    "submission_id": "sub_9f8e7d6c",
+    "latency_ms": 1380
+  }
+}</pre></div>
+          <p>Events: <code>url.queued</code>, <code>url.submitted</code>, <code>url.indexed</code>, <code>url.failed</code>, <code>credits.low</code>. Every request is signed with an HMAC-SHA256 signature in the <code>X-IndexJet-Signature</code> header — always verify it.</p>
+
+          <h2 id="limits">Rate Limits</h2>
+          <table>
+            <thead><tr><th>Plan</th><th>Requests / min</th><th>URLs / request</th></tr></thead>
+            <tbody>
+              <tr><td>Starter</td><td>60</td><td>100</td></tr>
+              <tr><td>Pro</td><td>300</td><td>1,000</td></tr>
+              <tr><td>Agency</td><td>600</td><td>1,000</td></tr>
+              <tr><td>Enterprise</td><td>Custom</td><td>Custom</td></tr>
+            </tbody>
+          </table>
+          <p>Limits are communicated via <code>X-RateLimit-Limit</code>, <code>X-RateLimit-Remaining</code> and <code>X-RateLimit-Reset</code> response headers. When exceeded, the API returns <code>429 Too Many Requests</code> with a <code>Retry-After</code> header.</p>
+
+          <h2 id="errors">Error Codes</h2>
+          <table>
+            <thead><tr><th>Code</th><th>Meaning</th><th>What to do</th></tr></thead>
+            <tbody>
+              <tr><td><code>invalid_url</code></td><td>URL failed syntax validation</td><td>Ensure it starts with http(s):// and is absolute</td></tr>
+              <tr><td><code>robots_blocked</code></td><td>Blocked by robots.txt</td><td>Allow crawlers in robots.txt, then resubmit</td></tr>
+              <tr><td><code>not_verified</code></td><td>Domain not verified for this project</td><td>Complete domain verification first</td></tr>
+              <tr><td><code>quota_exceeded</code></td><td>No credits remaining</td><td>Upgrade your plan or buy a credit pack</td></tr>
+              <tr><td><code>rate_limited</code></td><td>Too many requests</td><td>Respect the Retry-After header</td></tr>
+            </tbody>
+          </table>
+          <p>Need help? <a href="contact.html">Contact support</a> — median first response is under 2 hours.</p>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a class="brand" href="index.html" aria-label="IndexJet home">
+            <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 64 64" fill="none"><path d="M36 10 18 36h11l-3 18 20-27H34l2-17z" fill="#fff"/></svg></span>
+            IndexJet
+          </a>
+          <p>The fastest way to get your URLs discovered, crawled and indexed across every major search engine.</p>
+        </div>
+        <nav class="footer-col" aria-label="Product">
+          <h3>Product</h3>
+          <ul>
+            <li><a href="features.html">Features</a></li>
+            <li><a href="pricing.html">Pricing</a></li>
+            <li><a href="dashboard.html">Dashboard</a></li>
+            <li><a href="changelog.html">Changelog</a></li>
+            <li><a href="status.html" class="status-link">Status Page</a></li>
+          </ul>
+        </nav>
+        <nav class="footer-col" aria-label="Developers">
+          <h3>Developers</h3>
+          <ul>
+            <li><a href="docs.html">Documentation</a></li>
+            <li><a href="api.html">API Reference</a></li>
+            <li><a href="docs.html#quickstart">Quickstart</a></li>
+            <li><a href="docs.html#webhooks">Webhooks</a></li>
+          </ul>
+        </nav>
+        <nav class="footer-col" aria-label="Company">
+          <h3>Company</h3>
+          <ul>
+            <li><a href="blog.html">Blog</a></li>
+            <li><a href="contact.html">Contact</a></li>
+            <li><a href="contact.html">Support</a></li>
+          </ul>
+        </nav>
+        <nav class="footer-col" aria-label="Legal">
+          <h3>Legal</h3>
+          <ul>
+            <li><a href="privacy.html">Privacy Policy</a></li>
+            <li><a href="terms.html">Terms of Service</a></li>
+            <li><a href="refund.html">Refund Policy</a></li>
+          </ul>
+        </nav>
+      </div>
+      <div class="footer-bottom">
+        <p style="margin:0">&copy; <span data-year>2026</span> IndexJet. All rights reserved.</p>
+        <div class="footer-social">
+          <a href="https://twitter.com/indexjet" aria-label="IndexJet on X (Twitter)" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.9 2H22l-6.8 7.8L23.3 22h-6.3l-4.9-6.4L6.5 22H3.4l7.3-8.3L2.7 2h6.4l4.4 5.9L18.9 2zm-1.1 18.2h1.7L7.1 3.7H5.3l12.5 16.5z"/></svg></a>
+          <a href="https://www.linkedin.com/company/indexjet" aria-label="IndexJet on LinkedIn" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.4 20.4h-3.5v-5.6c0-1.3 0-3-1.9-3s-2.1 1.4-2.1 2.9v5.7H9.4V9h3.4v1.6h.1c.5-.9 1.6-1.9 3.4-1.9 3.6 0 4.2 2.4 4.2 5.4v6.3zM5.3 7.4a2 2 0 1 1 0-4.1 2 2 0 0 1 0 4.1zM7.1 20.4H3.6V9h3.5v11.4z"/></svg></a>
+          <a href="https://github.com/indexjet" aria-label="IndexJet on GitHub" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.2-3.4-1.2-.5-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.3 1.1 2.9.8.1-.6.3-1.1.6-1.3-2.2-.3-4.6-1.1-4.6-5 0-1.1.4-2 1-2.7-.1-.2-.4-1.2.1-2.6 0 0 .8-.3 2.7 1a9.4 9.4 0 0 1 5 0c1.9-1.3 2.7-1 2.7-1 .5 1.4.2 2.4.1 2.6.6.7 1 1.6 1 2.7 0 3.9-2.4 4.7-4.6 5 .4.3.7.9.7 1.9v2.8c0 .3.2.6.7.5A10 10 0 0 0 12 2z"/></svg></a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <div class="toast-region" role="status" aria-live="polite"></div>
+  <script src="assets/js/main.js" defer></script>
+</body>
+</html>
