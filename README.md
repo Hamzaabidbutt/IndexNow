@@ -67,4 +67,46 @@ python3 -m http.server 8000
 | Radius | 14–18px |
 | Font | Inter / system-ui stack |
 
-The demo dashboard and submission widget run on simulated client-side data; wire them to a real backend by replacing the handlers in `assets/js/*.js` with calls to your REST API.
+## 🔴 Real URL submission (live engine)
+
+The repo includes a **working submission engine** built on GitHub Actions — no server needed. It submits through:
+
+- **IndexNow** → Bing, Yandex, Seznam.cz, Naver (works out of the box)
+- **Google Indexing API** → works after a one-time secret setup (below)
+
+### The 5 ways to submit
+
+| Method | How |
+|---|---|
+| **Manual run** | GitHub → Actions → *Submit URLs to Search Engines* → Run workflow → paste URLs or a sitemap URL |
+| **Push-to-submit** | Add URLs to `submissions/urls.txt`, push to `main` — they're submitted automatically |
+| **Sitemap monitoring** | List sitemaps in `submissions/sitemaps.txt` — every 6 h, URLs with a fresh `<lastmod>` are submitted |
+| **Website widget** | On the live site, click *Enable live submissions* in the submission widget and paste a GitHub fine-grained PAT (Actions read/write on this repo). The widget then triggers real workflow runs |
+| **CLI** | `node tools/indexnow.mjs --urls "https://site.com/page"` or `--sitemap https://site.com/sitemap.xml` |
+
+Results appear in each workflow run's **Summary** (per-engine, per-host status).
+
+### Making submissions work for your domain (IndexNow)
+
+IndexNow verifies ownership via a key file. This repo's key is **`dbcb3885cc778f6b193c6e0e81ab7d31`**, already hosted for the GitHub Pages site itself. To submit URLs for **any other domain you own**, upload the file
+
+```
+https://yourdomain.com/dbcb3885cc778f6b193c6e0e81ab7d31.txt
+```
+
+containing exactly `dbcb3885cc778f6b193c6e0e81ab7d31` (same file as in this repo root). That's it — submissions for that domain will then return HTTP 200/202. Without the key file, engines reject them (403/422) — this is how IndexNow prevents people from submitting sites they don't own.
+
+### Google Indexing API setup (one-time)
+
+1. In [Google Cloud Console](https://console.cloud.google.com/), create a project and enable the **Web Search Indexing API**.
+2. Create a **service account**, then create a JSON key for it.
+3. In [Google Search Console](https://search.google.com/search-console), add the service account's email as an **Owner** of your property.
+4. In this repo: Settings → Secrets and variables → Actions → New repository secret named `GOOGLE_SERVICE_ACCOUNT_JSON`, paste the entire JSON key file.
+
+⚠️ Google officially supports this API for **JobPosting and livestream pages only**; for general pages, rely on IndexNow, sitemaps and the quality signals covered in the blog articles. Default quota is 200 URLs/day.
+
+### Honest expectations
+
+Submission ≠ indexing. These APIs get your URLs **discovered and crawled fast** (Bing/Yandex typically within the hour). Whether a page **enters the index** is always the engine's decision, based on content quality, canonicals and site authority. No tool can guarantee 100% indexing — anyone claiming otherwise is selling something.
+
+The dashboard's charts and tables still show simulated demo data; the submission paths above are real.
