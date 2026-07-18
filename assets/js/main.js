@@ -151,7 +151,57 @@
   }
   window.ijIsValidUrl = isValidUrl;
 
-  /* ---------- Submission widget (demo) ---------- */
+  /* ---------- Live submission engine (GitHub Actions dispatch) ----------
+     When a GitHub token is connected, the widget triggers the repo's
+     "Submit URLs to Search Engines" workflow, which performs REAL
+     IndexNow + Google Indexing API submissions. Without a token, the
+     widget runs in demo mode. */
+  var GH_REPO = "Hamzaabidbutt/IndexNow";
+  var GH_WORKFLOW = "submit-urls.yml";
+  function getToken() {
+    try { return localStorage.getItem("ij-gh-token") || ""; } catch (e) { return ""; }
+  }
+  function connectLive() {
+    var token = window.prompt(
+      "Paste a GitHub fine-grained personal access token with Actions read/write access to " + GH_REPO + ".\n" +
+      "It is stored only in this browser (localStorage) and used to trigger real IndexNow + Google submissions.\n" +
+      "Leave empty to disconnect."
+    );
+    if (token === null) return;
+    try {
+      if (token.trim()) {
+        localStorage.setItem("ij-gh-token", token.trim());
+        window.ijToast("Live submissions enabled — URLs will be submitted for real", "success");
+      } else {
+        localStorage.removeItem("ij-gh-token");
+        window.ijToast("Live submissions disabled — back to demo mode", "info");
+      }
+    } catch (e) {
+      window.ijToast("Could not save the token (storage blocked)", "error");
+    }
+  }
+  document.querySelectorAll("[data-connect-live]").forEach(function (el) {
+    el.addEventListener("click", function (e) { e.preventDefault(); connectLive(); });
+  });
+
+  function dispatchWorkflow(urls) {
+    return fetch("https://api.github.com/repos/" + GH_REPO + "/actions/workflows/" + GH_WORKFLOW + "/dispatches", {
+      method: "POST",
+      headers: {
+        "Authorization": "Bearer " + getToken(),
+        "Accept": "application/vnd.github+json",
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ ref: "main", inputs: { urls: urls.join(",") } })
+    }).then(function (res) {
+      if (res.status === 204) return true;
+      return res.json().catch(function () { return {}; }).then(function (body) {
+        throw new Error(body.message || ("GitHub API returned HTTP " + res.status));
+      });
+    });
+  }
+
+  /* ---------- Submission widget ---------- */
   function bindSubmitForm(formId, getUrls) {
     var form = document.getElementById(formId);
     if (!form) return;
@@ -170,28 +220,48 @@
       if (input) input.removeAttribute("aria-invalid");
       var btn = form.querySelector("button[type='submit']");
       var original = btn.textContent;
+      var box = form.querySelector(".widget-result");
       btn.disabled = true;
       btn.textContent = "Submitting…";
-      setTimeout(function () {
+      function finish(message, toastMsg, toastType) {
         btn.disabled = false;
         btn.textContent = original;
-        var box = form.querySelector(".widget-result");
         if (box) {
           box.hidden = false;
-          box.querySelector("span").textContent =
-            result.count + (result.count === 1 ? " URL" : " URLs") +
-            " accepted — queued for indexing. Create a free account to track live status.";
+          box.querySelector("span").textContent = message;
         }
-        window.ijToast(result.count + " URL" + (result.count === 1 ? "" : "s") + " submitted to the indexing queue", "success");
-        form.reset();
-      }, 900);
+        window.ijToast(toastMsg, toastType);
+        if (toastType !== "error") form.reset();
+      }
+      var count = result.urls.length;
+      var plural = count === 1 ? " URL" : " URLs";
+      if (getToken()) {
+        dispatchWorkflow(result.urls).then(function () {
+          finish(
+            count + plural + " sent to the live submission engine (IndexNow + Google). Track the run in the repo's Actions tab.",
+            count + plural + " submitted for real indexing", "success"
+          );
+        }, function (err) {
+          finish(
+            "Live submission failed: " + err.message + " — check your token's permissions.",
+            "Live submission failed: " + err.message, "error"
+          );
+        });
+      } else {
+        setTimeout(function () {
+          finish(
+            count + plural + " validated (demo mode). Click “Enable live submissions” below to submit for real via IndexNow + Google.",
+            count + plural + " validated — demo mode", "info"
+          );
+        }, 700);
+      }
     });
   }
 
   bindSubmitForm("single-url-form", function (form) {
-    var value = (form.querySelector("input[type='url']") || {}).value || "";
+    var value = ((form.querySelector("input[type='url']") || {}).value || "").trim();
     if (!isValidUrl(value)) return { error: "Please enter a valid URL, including https://" };
-    return { count: 1 };
+    return { urls: [value] };
   });
 
   bindSubmitForm("bulk-url-form", function (form) {
@@ -201,7 +271,7 @@
     var invalid = lines.filter(function (l) { return !isValidUrl(l); });
     if (invalid.length) return { error: invalid.length + " line(s) are not valid URLs. Each line must start with https://" };
     var unique = lines.filter(function (l, i) { return lines.indexOf(l) === i; });
-    return { count: unique.length };
+    return { urls: unique };
   });
 
   /* ---------- Drag & drop upload (demo) ---------- */

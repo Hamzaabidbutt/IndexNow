@@ -1,0 +1,99 @@
+name: Submit URLs to Search Engines
+
+on:
+  # 1. Manual: Actions tab → "Submit URLs to Search Engines" → Run workflow
+  workflow_dispatch:
+    inputs:
+      urls:
+        description: "URLs to submit (comma or newline separated)"
+        required: false
+        type: string
+      sitemap:
+        description: "Sitemap URL — submits every URL it contains"
+        required: false
+        type: string
+      engines:
+        description: "Which engines to submit to"
+        required: false
+        type: choice
+        options: [all, indexnow, google]
+        default: all
+
+  # 2. Push-to-submit: edit submissions/urls.txt on main
+  push:
+    branches: [main]
+    paths: ["submissions/urls.txt"]
+
+  # 3. Sitemap monitoring: every 6 hours, submit URLs whose <lastmod>
+  #    changed in the window, from sitemaps listed in submissions/sitemaps.txt
+  schedule:
+    - cron: "17 */6 * * *"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: submit-urls
+  cancel-in-progress: false
+
+jobs:
+  submit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Determine submission source
+        id: source
+        env:
+          INPUT_URLS: ${{ inputs.urls }}
+          INPUT_SITEMAP: ${{ inputs.sitemap }}
+        run: |
+          ARGS=""
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            if [ -n "$INPUT_URLS" ]; then
+              # Pass URLs via a temp file to handle newlines safely
+              printf '%s\n' "$INPUT_URLS" | tr ',' '\n' > /tmp/dispatch-urls.txt
+              ARGS="--file /tmp/dispatch-urls.txt"
+            fi
+            if [ -n "$INPUT_SITEMAP" ]; then
+              ARGS="$ARGS --sitemap $INPUT_SITEMAP"
+            fi
+          elif [ "${{ github.event_name }}" = "push" ]; then
+            ARGS="--file submissions/urls.txt"
+          else
+            # schedule: monitor sitemaps for recent changes
+            SITEMAPS=$(grep -v '^#' submissions/sitemaps.txt | grep -v '^\s*$' | paste -sd, - || true)
+            if [ -z "$SITEMAPS" ]; then
+              echo "No sitemaps configured in submissions/sitemaps.txt — nothing to monitor."
+            else
+              ARGS="--sitemap $SITEMAPS --recent-hours 6"
+            fi
+          fi
+          echo "args=$ARGS" >> "$GITHUB_OUTPUT"
+          echo "Submission args: $ARGS"
+
+      - name: Start results summary
+        if: steps.source.outputs.args != ''
+        run: |
+          {
+            echo "## URL Submission Results"
+            echo ""
+            echo "| Engine | Host | URLs | Result |"
+            echo "|---|---|---|---|"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Submit via IndexNow (Bing, Yandex, Seznam, Naver)
+        if: steps.source.outputs.args != '' && (github.event_name != 'workflow_dispatch' || inputs.engines == 'all' || inputs.engines == 'indexnow')
+        run: node tools/indexnow.mjs ${{ steps.source.outputs.args }}
+
+      - name: Submit via Google Indexing API
+        if: steps.source.outputs.args != '' && (github.event_name != 'workflow_dispatch' || inputs.engines == 'all' || inputs.engines == 'google')
+        env:
+          GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+        run: node tools/google-indexing.mjs ${{ steps.source.outputs.args }}

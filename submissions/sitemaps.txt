@@ -1,0 +1,6 @@
+# Sitemaps monitored every 6 hours.
+#
+# One sitemap URL per line. URLs whose <lastmod> changed within the last
+# 6 hours are submitted automatically. Lines starting with # are ignored.
+
+https://hamzaabidbutt.github.io/IndexNow/sitemap.xml

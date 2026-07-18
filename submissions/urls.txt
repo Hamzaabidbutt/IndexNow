@@ -1,0 +1,11 @@
+# IndexJet push-to-submit queue
+#
+# Add one URL per line and push to main — every URL below is submitted to
+# IndexNow (Bing, Yandex, Seznam, Naver) and, if the secret is configured,
+# the Google Indexing API. Lines starting with # are ignored.
+#
+# Reminder: a URL's domain must host the IndexNow key file
+# (see README § Making submissions work for your domain).
+#
+# Example:
+# https://hamzaabidbutt.github.io/IndexNow/blog/indexnow-guide.html

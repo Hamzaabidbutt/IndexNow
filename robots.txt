@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /dashboard.html
 
-Sitemap: https://www.indexjet.io/sitemap.xml
+Sitemap: https://hamzaabidbutt.github.io/IndexNow/sitemap.xml
