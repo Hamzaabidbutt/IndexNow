@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dashboard | IndexJet</title>
+  <meta name="description" content="IndexJet dashboard — submit URLs, monitor indexing status, manage API keys, analytics, billing and your team.">
+  <meta name="robots" content="noindex">
+  <link rel="canonical" href="https://www.indexjet.io/dashboard.html">
+  <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <link rel="stylesheet" href="assets/css/dashboard.css">
+  <meta name="theme-color" content="#0A1128">
+  <script>
+    // Apply saved theme before first paint to avoid a flash
+    (function () {
+      try {
+        var t = localStorage.getItem("ij-theme");
+        if (!t) t = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        document.documentElement.setAttribute("data-theme", t);
+      } catch (e) {}
+    })();
+  </script>
+</head>
+<body class="dashboard">
+  <a class="skip-link" href="#db-content">Skip to dashboard content</a>
+
+  <div class="db-layout">
+    <!-- ============ SIDEBAR ============ -->
+    <aside class="db-sidebar" aria-label="Dashboard navigation">
+      <a class="brand" href="index.html" aria-label="IndexJet home">
+        <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 64 64" fill="none"><path d="M36 10 18 36h11l-3 18 20-27H34l2-17z" fill="#fff"/></svg></span>
+        IndexJet
+      </a>
+      <nav class="db-nav">
+        <h2>Indexing</h2>
+        <button data-panel="overview" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
+          Overview
+        </button>
+        <button data-panel="submit" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+          URL Submission
+        </button>
+        <button data-panel="bulk" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>
+          Bulk Submission
+        </button>
+        <button data-panel="reports" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>
+          Reports
+        </button>
+        <h2>Developers</h2>
+        <button data-panel="apikeys" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0 3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
+          API Keys
+        </button>
+        <button data-panel="analytics" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 3v18h18"/><path d="m7 15 4-6 4 3 5-8"/></svg>
+          Usage Analytics
+        </button>
+        <h2>Workspace</h2>
+        <button data-panel="billing" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
+          Billing
+        </button>
+        <button data-panel="team" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          Team Members
+        </button>
+        <button data-panel="notifications" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
+          Notifications <span class="nav-badge">3</span>
+        </button>
+        <button data-panel="settings" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          Settings
+        </button>
+      </nav>
+      <div class="db-plan-card">
+        <b>Pro Plan</b>
+        8,412 / 15,000 URLs used
+        <div class="progress-track"><div class="progress-fill" style="width:56%"></div></div>
+        <a href="pricing.html" style="color:var(--blue-400); font-weight:600;">Upgrade →</a>
+      </div>
+    </aside>
+    <div class="db-overlay" aria-hidden="true"></div>
+
+    <!-- ============ MAIN ============ -->
+    <div class="db-main">
+      <header class="db-topbar">
+        <button class="icon-btn db-menu-btn" aria-expanded="false" aria-label="Toggle sidebar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+        </button>
+        <h1 id="db-title">Overview</h1>
+        <div class="db-search">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+          <input type="search" placeholder="Search URLs, batches, reports…" aria-label="Search dashboard">
+        </div>
+        <button class="icon-btn theme-toggle" aria-pressed="false" aria-label="Toggle dark mode">
+          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32 1.41 1.41M2 12h2m16 0h2M4.93 19.07l1.41-1.41m11.32-11.32 1.41-1.41"/></svg>
+        </button>
+        <button class="icon-btn" aria-label="Notifications — 3 unread">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
+          <span class="dot" aria-hidden="true"></span>
+        </button>
+        <div class="db-user">
+          <span class="avatar a1" aria-hidden="true">HB</span>
+          <span>Hamza B.</span>
+        </div>
+      </header>
+
+      <main class="db-content" id="db-content">
+
+        <!-- ===== OVERVIEW ===== -->
+        <section class="db-panel" data-panel="overview" aria-label="Overview">
+          <div class="db-stats">
+            <div class="db-stat">
+              <div class="label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 5v14m7-7H5"/></svg>Submitted Today</div>
+              <div class="value"><span data-count="1284">0</span></div>
+              <div class="delta up">▲ 18.2% vs yesterday</div>
+            </div>
+            <div class="db-stat">
+              <div class="label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 12a9 9 0 1 1-6.2-8.56"/></svg>Processing</div>
+              <div class="value"><span data-count="47">0</span></div>
+              <div class="delta neutral">Queue: 12 · Failed: 3</div>
+            </div>
+            <div class="db-stat">
+              <div class="label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Indexed (30d)</div>
+              <div class="value"><span data-count="31208">0</span></div>
+              <div class="delta up">98.9% success rate</div>
+            </div>
+            <div class="db-stat">
+              <div class="label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>Avg Response</div>
+              <div class="value"><span data-count="1.2" data-decimals="1" data-suffix="s">0</span></div>
+              <div class="delta neutral">Credits left: 6,588</div>
+            </div>
+          </div>
+
+          <div class="row-31">
+            <div class="db-card">
+              <div class="db-card-head">
+                <h2>Indexed URLs — last 14 days</h2>
+                <select class="input" style="width:auto; min-height:38px; padding:6px 12px; font-size:.85rem;" aria-label="Date range">
+                  <option>Last 14 days</option><option>Last 30 days</option><option>Last 90 days</option>
+                </select>
+              </div>
+              <div class="db-chart" role="img" aria-label="Bar chart of daily indexed URLs, trending upward over 14 days">
+                <div class="bar" style="height:38%"></div><div class="bar" style="height:46%"></div>
+                <div class="bar" style="height:41%"></div><div class="bar" style="height:55%"></div>
+                <div class="bar" style="height:50%"></div><div class="bar" style="height:63%"></div>
+                <div class="bar" style="height:59%"></div><div class="bar" style="height:70%"></div>
+                <div class="bar" style="height:66%"></div><div class="bar" style="height:74%"></div>
+                <div class="bar" style="height:81%"></div><div class="bar" style="height:77%"></div>
+                <div class="bar" style="height:92%"></div><div class="bar" style="height:100%"></div>
+              </div>
+              <div class="db-chart-labels"><span>Jul 5</span><span>Jul 11</span><span>Jul 18</span></div>
+            </div>
+
+            <div class="db-card">
+              <h2>Engine breakdown</h2>
+              <div class="donut-row">
+                <svg class="donut" viewBox="0 0 42 42" role="img" aria-label="Donut chart: Bing and IndexNow 46%, Google 41%, Yandex and others 13%">
+                  <circle cx="21" cy="21" r="15.9" fill="none" stroke="var(--db-border)" stroke-width="5"/>
+                  <circle cx="21" cy="21" r="15.9" fill="none" stroke="#06B6D4" stroke-width="5" stroke-dasharray="46 54" stroke-dashoffset="25" stroke-linecap="round"/>
+                  <circle cx="21" cy="21" r="15.9" fill="none" stroke="#2563EB" stroke-width="5" stroke-dasharray="41 59" stroke-dashoffset="79" stroke-linecap="round"/>
+                  <circle cx="21" cy="21" r="15.9" fill="none" stroke="#10B981" stroke-width="5" stroke-dasharray="13 87" stroke-dashoffset="38" stroke-linecap="round"/>
+                </svg>
+                <ul class="donut-legend" style="padding:0; margin:0; flex:1;">
+                  <li><i style="background:#06B6D4"></i>Bing / IndexNow <b>46%</b></li>
+                  <li><i style="background:#2563EB"></i>Google <b>41%</b></li>
+                  <li><i style="background:#10B981"></i>Yandex &amp; others <b>13%</b></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="db-card">
+            <div class="db-card-head">
+              <h2>Recent submissions <span class="live-dot" style="margin-left:10px;">LIVE</span></h2>
+              <button class="btn btn-secondary btn-sm" data-toast="Report export started — we'll email you a download link" type="button">Export CSV</button>
+            </div>
+            <div class="db-table-wrap">
+              <table class="db-table">
+                <thead><tr><th scope="col">URL</th><th scope="col">Status</th><th scope="col">Engines</th><th scope="col">Submitted</th></tr></thead>
+                <tbody id="recent-submissions">
+                  <tr><td class="url-cell">https://example.com/blog/launch-week-recap</td><td><span class="status-pill indexed"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Indexed</span></td><td>Google, Bing, IndexNow</td><td>09:41:12</td></tr>
+                  <tr><td class="url-cell">https://store.example/products/aurora-lamp</td><td><span class="status-pill processing"><svg class="spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="M21 12a9 9 0 1 1-6.2-8.56"/></svg>Processing</span></td><td>Google, Bing, IndexNow</td><td>09:40:58</td></tr>
+                  <tr><td class="url-cell">https://docs.example/guides/webhooks</td><td><span class="status-pill queued">Queued</span></td><td>Google, Bing, IndexNow</td><td>09:40:31</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== URL SUBMISSION ===== -->
+        <section class="db-panel" data-panel="submit" aria-label="URL submission" hidden>
+          <div class="row-2">
+            <div class="db-card">
+              <h2>Submit a single URL</h2>
+              <p class="sub">Validated, canonicalized and queued in under a second.</p>
+              <form id="db-single-form" novalidate>
+                <div class="field">
+                  <label for="db-url">Page URL</label>
+                  <input class="input" id="db-url" type="url" placeholder="https://yoursite.com/new-page" required>
+                </div>
+                <div class="field">
+                  <label for="db-priority">Priority</label>
+                  <select class="input" id="db-priority">
+                    <option>Normal</option><option>High — use priority lane</option><option>Low — background</option>
+                  </select>
+                </div>
+                <button class="btn btn-primary" type="submit">Index This URL</button>
+              </form>
+            </div>
+            <div class="db-card">
+              <h2>Submission tips</h2>
+              <ul style="color:var(--db-text-muted); font-size:.9rem; display:grid; gap:8px; margin:0; padding-left:18px;">
+                <li>Submit immediately after publishing — freshness boosts pickup speed.</li>
+                <li>Use <strong>High priority</strong> for time-sensitive content like news and launches.</li>
+                <li>Updated pages? Resubmit after meaningful changes and update your sitemap's <code>lastmod</code>.</li>
+                <li>Duplicates within 24h are free — resubmitting won't burn credits.</li>
+                <li>Blocked by robots.txt or noindex? We'll flag it before charging a credit.</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== BULK SUBMISSION ===== -->
+        <section class="db-panel" data-panel="bulk" aria-label="Bulk submission" hidden>
+          <div class="row-2">
+            <div class="db-card">
+              <h2>Paste URLs</h2>
+              <p class="sub">Up to 10,000 URLs, one per line. Duplicates removed automatically.</p>
+              <form id="db-bulk-form" novalidate>
+                <div class="field">
+                  <label for="db-bulk">URL list</label>
+                  <textarea class="input" id="db-bulk" placeholder="https://yoursite.com/page-one&#10;https://yoursite.com/page-two" spellcheck="false"></textarea>
+                </div>
+                <button class="btn btn-primary" type="submit">Validate &amp; Queue</button>
+              </form>
+            </div>
+            <div class="db-card">
+              <h2>Upload a file</h2>
+              <p class="sub">.txt (one URL per line) or .csv (first column). Max 10 MB.</p>
+              <div class="dropzone" tabindex="0" role="button" aria-label="Upload a .txt or .csv file of URLs">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
+                <p><b>Drag &amp; drop</b> or click to browse</p>
+                <input type="file" accept=".txt,.csv" class="visually-hidden" aria-hidden="true" tabindex="-1">
+              </div>
+              <div class="widget-result" hidden role="status">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4 12 14.01l-3-3"/></svg>
+                <span></span>
+              </div>
+            </div>
+          </div>
+          <div class="db-card">
+            <h2>Recent batches</h2>
+            <div class="db-table-wrap">
+              <table class="db-table">
+                <thead><tr><th scope="col">Batch</th><th scope="col">URLs</th><th scope="col">Indexed</th><th scope="col">Failed</th><th scope="col">Status</th><th scope="col">Created</th></tr></thead>
+                <tbody>
+                  <tr><td><code>bat_7d1e2f3a</code></td><td>2,400</td><td>2,371</td><td>4</td><td><span class="status-pill processing"><svg class="spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="M21 12a9 9 0 1 1-6.2-8.56"/></svg>Processing</span></td><td>Today, 08:12</td></tr>
+                  <tr><td><code>bat_5c9a8b21</code></td><td>860</td><td>860</td><td>0</td><td><span class="status-pill indexed"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Complete</span></td><td>Yesterday, 17:44</td></tr>
+                  <tr><td><code>bat_2f4e6d80</code></td><td>5,000</td><td>4,942</td><td>58</td><td><span class="status-pill indexed"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Complete</span></td><td>Jul 15, 11:03</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== REPORTS ===== -->
+        <section class="db-panel" data-panel="reports" aria-label="Reports" hidden>
+          <div class="db-card">
+            <div class="db-card-head">
+              <h2>Indexing reports</h2>
+              <div style="display:flex; gap:10px;">
+                <button class="btn btn-secondary btn-sm" data-toast="CSV export started — download link on the way" type="button">Export CSV</button>
+                <button class="btn btn-secondary btn-sm" data-toast="PDF report is being generated" type="button">Export PDF</button>
+              </div>
+            </div>
+            <div class="db-table-wrap">
+              <table class="db-table">
+                <thead><tr><th scope="col">Report</th><th scope="col">Period</th><th scope="col">URLs</th><th scope="col">Success</th><th scope="col">Avg latency</th></tr></thead>
+                <tbody>
+                  <tr><td>Weekly coverage report</td><td>Jul 11 – Jul 18</td><td>9,204</td><td><span class="check-yes">99.1%</span></td><td>1.2s</td></tr>
+                  <tr><td>Weekly coverage report</td><td>Jul 4 – Jul 11</td><td>8,716</td><td><span class="check-yes">98.7%</span></td><td>1.3s</td></tr>
+                  <tr><td>Monthly summary</td><td>June 2026</td><td>34,882</td><td><span class="check-yes">98.9%</span></td><td>1.4s</td></tr>
+                  <tr><td>Monthly summary</td><td>May 2026</td><td>29,113</td><td><span class="check-yes">98.4%</span></td><td>1.5s</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="db-card">
+            <h2>Failed submissions needing attention</h2>
+            <div class="db-table-wrap">
+              <table class="db-table">
+                <thead><tr><th scope="col">URL</th><th scope="col">Reason</th><th scope="col">Action</th></tr></thead>
+                <tbody>
+                  <tr><td class="url-cell">https://example.com/old-landing-page</td><td><code>404 Not Found</code></td><td><button class="btn btn-secondary btn-sm" data-toast="Credit refunded and URL removed from queue" type="button">Dismiss &amp; refund</button></td></tr>
+                  <tr><td class="url-cell">https://example.com/private/draft-post</td><td><code>robots_blocked</code></td><td><button class="btn btn-secondary btn-sm" data-toast="URL re-queued — we'll re-check robots.txt" type="button">Retry</button></td></tr>
+                  <tr><td class="url-cell">https://example.com/tmp?session=8123</td><td><code>canonical_mismatch</code></td><td><button class="btn btn-secondary btn-sm" data-toast="Canonical URL submitted instead" type="button">Submit canonical</button></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== API KEYS ===== -->
+        <section class="db-panel" data-panel="apikeys" aria-label="API keys" hidden>
+          <div class="db-card">
+            <div class="db-card-head">
+              <h2>API keys</h2>
+              <button class="btn btn-primary btn-sm" data-toast="New API key created — copy it now, it won't be shown again" type="button">Create New Key</button>
+            </div>
+            <p class="sub">Keys are shown once at creation. Rotate regularly and never commit keys to source control.</p>
+            <div class="db-table-wrap">
+              <table class="db-table">
+                <thead><tr><th scope="col">Name</th><th scope="col">Key</th><th scope="col">Scope</th><th scope="col">Last used</th><th scope="col">Actions</th></tr></thead>
+                <tbody>
+                  <tr>
+                    <td>Production</td>
+                    <td><code class="key-value" id="key-1" data-key="ij_live_demo0000000000000000" data-hidden="true">ij_live_••••••••••••••••••••</code></td>
+                    <td><code>submit, read</code></td>
+                    <td>2 minutes ago</td>
+                    <td style="display:flex; gap:8px;">
+                      <button class="btn btn-secondary btn-sm" data-reveal-key="key-1" type="button">Reveal</button>
+                      <button class="btn btn-secondary btn-sm" data-copy-key="key-1" type="button">Copy</button>
+                      <button class="btn btn-secondary btn-sm" data-toast="Key revoked — active sessions will fail within 60s" data-toast-type="info" type="button">Revoke</button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>CI / staging</td>
+                    <td><code class="key-value" id="key-2" data-key="ij_test_demo0000000000000000" data-hidden="true">ij_test_••••••••••••••••••••</code></td>
+                    <td><code>submit</code></td>
+                    <td>3 days ago</td>
+                    <td style="display:flex; gap:8px;">
+                      <button class="btn btn-secondary btn-sm" data-reveal-key="key-2" type="button">Reveal</button>
+                      <button class="btn btn-secondary btn-sm" data-copy-key="key-2" type="button">Copy</button>
+                      <button class="btn btn-secondary btn-sm" data-toast="Key revoked — active sessions will fail within 60s" data-toast-type="info" type="button">Revoke</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="db-card">
+            <h2>Quick start</h2>
+            <div class="code-block"><span class="lang">bash</span><pre>curl -X POST https://api.indexjet.io/v1/submit \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"urls": ["https://yoursite.com/new-page"]}'</pre></div>
+            <p style="font-size:.9rem; color:var(--db-text-muted); margin:0;">Full reference at <a href="api.html">api.indexjet.io docs</a> — includes webhooks, rate limits and SDKs.</p>
+          </div>
+        </section>
+
+        <!-- ===== USAGE ANALYTICS ===== -->
+        <section class="db-panel" data-panel="analytics" aria-label="Usage analytics" hidden>
+          <div class="db-stats">
+            <div class="db-stat"><div class="label">API requests (30d)</div><div class="value"><span data-count="412807">0</span></div><div class="delta up">▲ 9.8%</div></div>
+            <div class="db-stat"><div class="label">Credits used</div><div class="value"><span data-count="8412">0</span></div><div class="delta neutral">of 15,000</div></div>
+            <div class="db-stat"><div class="label">p95 latency</div><div class="value"><span data-count="284" data-suffix="ms">0</span></div><div class="delta up">▼ 12ms</div></div>
+            <div class="db-stat"><div class="label">Error rate</div><div class="value"><span data-count="0.3" data-decimals="1" data-suffix="%">0</span></div><div class="delta up">▼ 0.1pt</div></div>
+          </div>
+          <div class="db-card">
+            <h2>Requests per day</h2>
+            <div class="db-chart" role="img" aria-label="Bar chart of daily API requests over the last two weeks">
+              <div class="bar" style="height:52%"></div><div class="bar" style="height:61%"></div>
+              <div class="bar" style="height:47%"></div><div class="bar" style="height:69%"></div>
+              <div class="bar" style="height:64%"></div><div class="bar" style="height:41%"></div>
+              <div class="bar" style="height:36%"></div><div class="bar" style="height:72%"></div>
+              <div class="bar" style="height:78%"></div><div class="bar" style="height:66%"></div>
+              <div class="bar" style="height:84%"></div><div class="bar" style="height:91%"></div>
+              <div class="bar" style="height:74%"></div><div class="bar" style="height:100%"></div>
+            </div>
+            <div class="db-chart-labels"><span>Jul 5</span><span>Jul 11</span><span>Jul 18</span></div>
+          </div>
+          <div class="db-card">
+            <h2>Usage by project</h2>
+            <div class="db-table-wrap">
+              <table class="db-table">
+                <thead><tr><th scope="col">Project</th><th scope="col">URLs (30d)</th><th scope="col">Success</th><th scope="col">Share</th></tr></thead>
+                <tbody>
+                  <tr><td>example.com</td><td>18,204</td><td><span class="check-yes">99.2%</span></td><td><div class="progress-track" style="width:140px"><div class="progress-fill" style="width:58%"></div></div></td></tr>
+                  <tr><td>store.example</td><td>9,318</td><td><span class="check-yes">98.6%</span></td><td><div class="progress-track" style="width:140px"><div class="progress-fill" style="width:30%"></div></div></td></tr>
+                  <tr><td>docs.example</td><td>3,686</td><td><span class="check-yes">99.7%</span></td><td><div class="progress-track" style="width:140px"><div class="progress-fill" style="width:12%"></div></div></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== BILLING ===== -->
+        <section class="db-panel" data-panel="billing" aria-label="Billing" hidden>
+          <div class="row-2">
+            <div class="db-card">
+              <h2>Current plan</h2>
+              <p style="font-size:1.6rem; font-weight:800; margin:6px 0 2px;">Pro — $49/mo</p>
+              <p class="sub" style="margin-top:0;">Renews August 1, 2026 · 15,000 URLs/month · 3 seats</p>
+              <div class="progress-track" style="margin-bottom:8px;"><div class="progress-fill" style="width:56%"></div></div>
+              <p style="font-size:.85rem; color:var(--db-text-muted);">8,412 of 15,000 credits used this cycle</p>
+              <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                <a class="btn btn-primary btn-sm" href="pricing.html">Upgrade Plan</a>
+                <button class="btn btn-secondary btn-sm" data-toast="1,000 extra credits added to your balance" type="button">Buy Credit Pack</button>
+              </div>
+            </div>
+            <div class="db-card">
+              <h2>Payment method</h2>
+              <div style="display:flex; align-items:center; gap:14px; padding:14px; border:1px solid var(--db-border); border-radius:12px; margin-bottom:14px;">
+                <svg width="38" height="26" viewBox="0 0 38 26" aria-hidden="true"><rect width="38" height="26" rx="4" fill="#1A2750"/><circle cx="15" cy="13" r="7" fill="#EB001B" opacity=".9"/><circle cx="23" cy="13" r="7" fill="#F79E1B" opacity=".9"/></svg>
+                <div><b style="font-size:.92rem;">Mastercard •••• 4242</b><br><span style="font-size:.8rem; color:var(--db-text-muted);">Expires 09/28</span></div>
+              </div>
+              <button class="btn btn-secondary btn-sm" data-toast="Redirecting to secure payment portal…" data-toast-type="info" type="button">Update Payment Method</button>
+            </div>
+          </div>
+          <div class="db-card">
+            <h2>Invoices</h2>
+            <div class="db-table-wrap">
+              <table class="db-table">
+                <thead><tr><th scope="col">Invoice</th><th scope="col">Date</th><th scope="col">Amount</th><th scope="col">Status</th><th scope="col"></th></tr></thead>
+                <tbody>
+                  <tr><td><code>INV-2026-0712</code></td><td>Jul 1, 2026</td><td>$49.00</td><td><span class="status-pill indexed">Paid</span></td><td><button class="btn btn-secondary btn-sm" data-toast="Invoice PDF downloading" type="button">PDF</button></td></tr>
+                  <tr><td><code>INV-2026-0601</code></td><td>Jun 1, 2026</td><td>$49.00</td><td><span class="status-pill indexed">Paid</span></td><td><button class="btn btn-secondary btn-sm" data-toast="Invoice PDF downloading" type="button">PDF</button></td></tr>
+                  <tr><td><code>INV-2026-0501</code></td><td>May 1, 2026</td><td>$49.00</td><td><span class="status-pill indexed">Paid</span></td><td><button class="btn btn-secondary btn-sm" data-toast="Invoice PDF downloading" type="button">PDF</button></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== TEAM ===== -->
+        <section class="db-panel" data-panel="team" aria-label="Team members" hidden>
+          <div class="db-card">
+            <div class="db-card-head">
+              <h2>Team members <span style="color:var(--db-text-muted); font-weight:500; font-size:.85rem;">(3 of 3 seats)</span></h2>
+              <button class="btn btn-primary btn-sm" data-toast="Invitation email sent" type="button">Invite Member</button>
+            </div>
+            <div class="member-row">
+              <span class="avatar a1" aria-hidden="true">HB</span>
+              <div class="info"><b>Hamza B.</b><span>hamza@example.com · joined Jan 2026</span></div>
+              <span class="role-chip owner">Owner</span>
+            </div>
+            <div class="member-row">
+              <span class="avatar a3" aria-hidden="true">AT</span>
+              <div class="info"><b>Aisha Tariq</b><span>aisha@example.com · joined Mar 2026</span></div>
+              <span class="role-chip">Admin</span>
+            </div>
+            <div class="member-row">
+              <span class="avatar a5" aria-hidden="true">DM</span>
+              <div class="info"><b>Daniel Mora</b><span>daniel@example.com · joined Jun 2026</span></div>
+              <span class="role-chip">Member</span>
+            </div>
+          </div>
+          <div class="db-card">
+            <h2>Roles</h2>
+            <div class="db-table-wrap">
+              <table class="db-table">
+                <thead><tr><th scope="col">Role</th><th scope="col">Submit URLs</th><th scope="col">Manage keys</th><th scope="col">Billing</th><th scope="col">Manage team</th></tr></thead>
+                <tbody>
+                  <tr><td><b>Owner</b></td><td class="check-yes">✓</td><td class="check-yes">✓</td><td class="check-yes">✓</td><td class="check-yes">✓</td></tr>
+                  <tr><td><b>Admin</b></td><td class="check-yes">✓</td><td class="check-yes">✓</td><td class="check-no">—</td><td class="check-yes">✓</td></tr>
+                  <tr><td><b>Member</b></td><td class="check-yes">✓</td><td class="check-no">—</td><td class="check-no">—</td><td class="check-no">—</td></tr>
+                  <tr><td><b>Viewer</b></td><td class="check-no">—</td><td class="check-no">—</td><td class="check-no">—</td><td class="check-no">—</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== NOTIFICATIONS ===== -->
+        <section class="db-panel" data-panel="notifications" aria-label="Notifications" hidden>
+          <div class="db-card">
+            <div class="db-card-head">
+              <h2>Notifications</h2>
+              <button class="btn btn-secondary btn-sm" data-toast="All notifications marked as read" type="button">Mark All Read</button>
+            </div>
+            <div class="notif-row">
+              <div class="feature-icon" style="color:var(--emerald-500);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></div>
+              <div><p><b>Batch bat_7d1e2f3a is 98% complete</b> — 2,371 of 2,400 URLs indexed.</p><time>12 minutes ago</time></div>
+            </div>
+            <div class="notif-row">
+              <div class="feature-icon" style="color:var(--amber-500);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v5m0 3h.01"/></svg></div>
+              <div><p><b>3 URLs failed with robots_blocked</b> — review them in Reports.</p><time>1 hour ago</time></div>
+            </div>
+            <div class="notif-row">
+              <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 3v18h18"/><path d="m7 15 4-6 4 3 5-8"/></svg></div>
+              <div><p><b>Weekly report ready</b> — Jul 11–18: 9,204 URLs, 99.1% success.</p><time>Today, 07:00</time></div>
+            </div>
+            <div class="notif-row">
+              <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg></div>
+              <div><p><b>Invoice INV-2026-0712 paid</b> — thanks! Receipt emailed.</p><time>Jul 1</time></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== SETTINGS ===== -->
+        <section class="db-panel" data-panel="settings" aria-label="Settings" hidden>
+          <div class="db-card">
+            <h2>Preferences</h2>
+            <div class="setting-row">
+              <div><b>Dark mode</b><p>Use the toggle in the top bar, or follow your system preference.</p></div>
+              <button class="switch" role="switch" aria-checked="false" aria-label="Toggle email digests" data-toast="Preference saved" type="button" onclick="this.setAttribute('aria-checked', this.getAttribute('aria-checked')!=='true')"></button>
+            </div>
+            <div class="setting-row">
+              <div><b>Weekly email digest</b><p>A summary of indexing activity every Monday morning.</p></div>
+              <button class="switch" role="switch" aria-checked="true" aria-label="Toggle weekly email digest" type="button" onclick="this.setAttribute('aria-checked', this.getAttribute('aria-checked')!=='true')"></button>
+            </div>
+            <div class="setting-row">
+              <div><b>Low-credit alerts</b><p>Notify me when remaining credits drop below 10%.</p></div>
+              <button class="switch" role="switch" aria-checked="true" aria-label="Toggle low credit alerts" type="button" onclick="this.setAttribute('aria-checked', this.getAttribute('aria-checked')!=='true')"></button>
+            </div>
+            <div class="setting-row">
+              <div><b>Failure webhooks</b><p>Send url.failed events to my configured webhook endpoint.</p></div>
+              <button class="switch" role="switch" aria-checked="true" aria-label="Toggle failure webhooks" type="button" onclick="this.setAttribute('aria-checked', this.getAttribute('aria-checked')!=='true')"></button>
+            </div>
+          </div>
+          <div class="db-card">
+            <h2>Security</h2>
+            <div class="setting-row">
+              <div><b>Two-factor authentication</b><p>Protect your account with an authenticator app.</p></div>
+              <button class="btn btn-secondary btn-sm" data-toast="2FA setup started — scan the QR code in the modal" data-toast-type="info" type="button">Enable 2FA</button>
+            </div>
+            <div class="setting-row">
+              <div><b>Active sessions</b><p>2 devices currently signed in.</p></div>
+              <button class="btn btn-secondary btn-sm" data-toast="All other sessions signed out" type="button">Sign Out Others</button>
+            </div>
+            <div class="setting-row">
+              <div><b>Export my data</b><p>Download all account and submission data (GDPR).</p></div>
+              <button class="btn btn-secondary btn-sm" data-toast="Export queued — we'll email a secure download link" type="button">Request Export</button>
+            </div>
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <div class="toast-region" role="status" aria-live="polite"></div>
+  <script src="assets/js/main.js" defer></script>
+  <script src="assets/js/dashboard.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,12 @@
+{
+  "name": "IndexJet — Fast URL Indexing",
+  "short_name": "IndexJet",
+  "description": "Get your URLs indexed in seconds across Google, Bing and IndexNow-powered search engines.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0A1128",
+  "theme_color": "#0A1128",
+  "icons": [
+    { "src": "assets/img/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}
